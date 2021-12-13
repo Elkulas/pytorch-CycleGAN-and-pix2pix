@@ -64,7 +64,9 @@ class BaseOptions():
         These options are defined in the <modify_commandline_options> function
         in model and dataset classes.
         """
+        # 使用基类进行初始化操作
         if not self.initialized:  # check if it has been initialized
+            # parser是argparse库的一个实例，在initial时候作为一个形参进行传入
             parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
             parser = self.initialize(parser)
 
@@ -72,12 +74,15 @@ class BaseOptions():
         opt, _ = parser.parse_known_args()
 
         # modify model-related parser options
+        # 获得和model相关的参数
         model_name = opt.model
+        # 这里import相关model
         model_option_setter = models.get_option_setter(model_name)
         parser = model_option_setter(parser, self.isTrain)
         opt, _ = parser.parse_known_args()  # parse again with new defaults
 
         # modify dataset-related parser options
+        # 这里获得对应的数据集的情况
         dataset_name = opt.dataset_mode
         dataset_option_setter = data.get_option_setter(dataset_name)
         parser = dataset_option_setter(parser, self.isTrain)
@@ -113,6 +118,7 @@ class BaseOptions():
 
     def parse(self):
         """Parse our options, create checkpoints directory suffix, and set up gpu device."""
+        
         opt = self.gather_options()
         opt.isTrain = self.isTrain   # train or test
 

@@ -41,6 +41,7 @@ def find_dataset_using_name(dataset_name):
 def get_option_setter(dataset_name):
     """Return the static method <modify_commandline_options> of the dataset class."""
     dataset_class = find_dataset_using_name(dataset_name)
+    type(dataset_class)
     return dataset_class.modify_commandline_options
 
 
@@ -69,7 +70,9 @@ class CustomDatasetDataLoader():
         Step 2: create a multi-threaded data loader.
         """
         self.opt = opt
+        # 这里将具体的mode传进去了
         dataset_class = find_dataset_using_name(opt.dataset_mode)
+        # 这一步，构造了具体的实例
         self.dataset = dataset_class(opt)
         print("dataset [%s] was created" % type(self.dataset).__name__)
         self.dataloader = torch.utils.data.DataLoader(
@@ -83,6 +86,7 @@ class CustomDatasetDataLoader():
 
     def __len__(self):
         """Return the number of data in the dataset"""
+        print("Hello from Loader!")
         return min(len(self.dataset), self.opt.max_dataset_size)
 
     def __iter__(self):

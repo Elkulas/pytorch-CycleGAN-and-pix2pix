@@ -144,6 +144,7 @@ def define_G(input_nc, output_nc, ngf, netG, norm='batch', use_dropout=False, in
     The generator has been initialized by <init_net>. It uses RELU for non-linearity.
     """
     net = None
+    # 从config中获取norm的类别
     norm_layer = get_norm_layer(norm_type=norm)
 
     if netG == 'resnet_9blocks':
@@ -156,6 +157,8 @@ def define_G(input_nc, output_nc, ngf, netG, norm='batch', use_dropout=False, in
         net = UnetGenerator(input_nc, output_nc, 8, ngf, norm_layer=norm_layer, use_dropout=use_dropout)
     else:
         raise NotImplementedError('Generator model name [%s] is not recognized' % netG)
+    # 初始化所有的参数，比如weights啥的
+    # 同时将整个模型放到GPU上
     return init_net(net, init_type, init_gain, gpu_ids)
 
 
@@ -337,11 +340,13 @@ class ResnetGenerator(nn.Module):
         else:
             use_bias = norm_layer == nn.InstanceNorm2d
 
+        ## 初始
         model = [nn.ReflectionPad2d(3),
                  nn.Conv2d(input_nc, ngf, kernel_size=7, padding=0, bias=use_bias),
                  norm_layer(ngf),
                  nn.ReLU(True)]
 
+        ## 下采样两次
         n_downsampling = 2
         for i in range(n_downsampling):  # add downsampling layers
             mult = 2 ** i
@@ -349,11 +354,13 @@ class ResnetGenerator(nn.Module):
                       norm_layer(ngf * mult * 2),
                       nn.ReLU(True)]
 
+        ## 添加n个resnet blocks
         mult = 2 ** n_downsampling
         for i in range(n_blocks):       # add ResNet blocks
 
             model += [ResnetBlock(ngf * mult, padding_type=padding_type, norm_layer=norm_layer, use_dropout=use_dropout, use_bias=use_bias)]
 
+        ## 上采样
         for i in range(n_downsampling):  # add upsampling layers
             mult = 2 ** (n_downsampling - i)
             model += [nn.ConvTranspose2d(ngf * mult, int(ngf * mult / 2),
@@ -362,6 +369,7 @@ class ResnetGenerator(nn.Module):
                                          bias=use_bias),
                       norm_layer(int(ngf * mult / 2)),
                       nn.ReLU(True)]
+        
         model += [nn.ReflectionPad2d(3)]
         model += [nn.Conv2d(ngf, output_nc, kernel_size=7, padding=0)]
         model += [nn.Tanh()]

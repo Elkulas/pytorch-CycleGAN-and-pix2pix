@@ -30,6 +30,7 @@ def find_model_using_name(model_name):
     and it is case-insensitive.
     """
     model_filename = "models." + model_name + "_model"
+    # 将模型导入
     modellib = importlib.import_module(model_filename)
     model = None
     target_model_name = model_name.replace('_', '') + 'model'
@@ -62,6 +63,7 @@ def create_model(opt):
         >>> model = create_model(opt)
     """
     model = find_model_using_name(opt.model)
+    # 这里就具体实例化了生成的model
     instance = model(opt)
     print("model [%s] was created" % type(instance).__name__)
     return instance

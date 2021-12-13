@@ -14,14 +14,15 @@ class UnalignedDataset(BaseDataset):
     You can train the model with the dataset flag '--dataroot /path/to/data'.
     Similarly, you need to prepare two directories:
     '/path/to/data/testA' and '/path/to/data/testB' during test time.
-    """
+    """                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
 
     def __init__(self, opt):
         """Initialize this dataset class.
 
         Parameters:
-            opt (Option class) -- stores all the experiment flags; needs to be a subclass of BaseOptions
+            opt (Option class) -- stores all the experiment flags; needs to be a subclass of BaseOptions                                                                                                                                                            
         """
+        print("NOw construct unaligned!")
         BaseDataset.__init__(self, opt)
         self.dir_A = os.path.join(opt.dataroot, opt.phase + 'A')  # create a path '/path/to/data/trainA'
         self.dir_B = os.path.join(opt.dataroot, opt.phase + 'B')  # create a path '/path/to/data/trainB'
@@ -33,8 +34,9 @@ class UnalignedDataset(BaseDataset):
         btoA = self.opt.direction == 'BtoA'
         input_nc = self.opt.output_nc if btoA else self.opt.input_nc       # get the number of channels of input image
         output_nc = self.opt.input_nc if btoA else self.opt.output_nc      # get the number of channels of output image
+        # 在这里对图片进行transform
         self.transform_A = get_transform(self.opt, grayscale=(input_nc == 1))
-        self.transform_B = get_transform(self.opt, grayscale=(output_nc == 1))
+        self.transform_B = get_transform(self.opt, grayscale=(output_nc == 1))                                                                                                                                                                                                                                                                                          
 
     def __getitem__(self, index):
         """Return a data point and its metadata information.
@@ -68,4 +70,5 @@ class UnalignedDataset(BaseDataset):
         As we have two datasets with potentially different number of images,
         we take a maximum of
         """
+        print("Hello from Unaligned len!")
         return max(self.A_size, self.B_size)
