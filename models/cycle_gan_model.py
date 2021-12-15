@@ -153,7 +153,9 @@ class CycleGANModel(BaseModel):
     def backward_G(self):
         """Calculate the loss for generators G_A and G_B"""
         ## 重要！这里就是计算GA和GB的loss的位置
-
+        ## 重要！这里就是计算GA和GB的loss的位置
+        ## 重要！这里就是计算GA和GB的loss的位置
+        
         lambda_idt = self.opt.lambda_identity
         lambda_A = self.opt.lambda_A
         lambda_B = self.opt.lambda_B
