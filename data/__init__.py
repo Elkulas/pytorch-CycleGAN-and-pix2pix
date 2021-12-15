@@ -54,6 +54,7 @@ def create_dataset(opt):
     Example:
         >>> from data import create_dataset
         >>> dataset = create_dataset(opt)
+    在这个位置将数据集导入，其中可以自己撰写Base的一个子类来定义自己的一个数据集，同时需要重构一下load data等等
     """
     data_loader = CustomDatasetDataLoader(opt)
     dataset = data_loader.load_data()
@@ -70,10 +71,11 @@ class CustomDatasetDataLoader():
         Step 2: create a multi-threaded data loader.
         """
         self.opt = opt
-        # 这里将具体的mode传进去了
+        # 这里将具体的mode传进去了,同时datasets class就已经是具体data的实例了
         dataset_class = find_dataset_using_name(opt.dataset_mode)
-        # 这一步，构造了具体的实例
+        # 传递到dataset
         self.dataset = dataset_class(opt)
+
         print("dataset [%s] was created" % type(self.dataset).__name__)
         self.dataloader = torch.utils.data.DataLoader(
             self.dataset,
