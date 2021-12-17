@@ -48,7 +48,7 @@ class UnalignedTripletDataset(BaseDataset):
             B (tensor)       -- its corresponding image in the target domain
             A_paths (str)    -- image paths
             B_paths (str)    -- image paths
-        由于使用的是triplet，所以在返回的时候是有一共三张图片
+        由于使用的是triplet，所以在返回的时候是有一共三张图片 A012
         """
         A_path = self.A_paths[index % self.A_size]  # make sure index is within then range
         if self.opt.serial_batches:   # make sure index is within then range
@@ -61,15 +61,15 @@ class UnalignedTripletDataset(BaseDataset):
 
         # apply image transformation
         # 对于triplet图片就只是使用了normalize操作
-        print("Aimg")
-        print(A_img.size)
+        # print("Aimg")
+        # print(A_img.size)
         A = self.transform_A(A_img)
         B = self.transform_B(B_img)
 
         # 对tensor进行拆分，判断crop
         if 'tricut' in self.opt.preprocess:
-            print("A")
-            print(A.shape)
+            # print("A")
+            # print(A.shape)
 
             w_total = A.size(2)
             w = int(w_total / 3)
@@ -103,28 +103,26 @@ class UnalignedTripletDataset(BaseDataset):
 
         # elif self.opt.preprocess == 'scale_width_trinone':
         else:
-            w_total = A_img.size(2)
+            w_total = A.size(2)
             w = int(w_total / 3)
-            h = A_img.size(1)
+            h = A.size(1)
 
-            A0 = A_img[:, :, 0: w]
+            A0 = A[:, :, 0: w]
 
-            A1 = A_img[:, :, w: 2 * w]
+            A1 = A[:, :, w: 2 * w]
 
-            A2 = A_img[:, :, 2 * w: 3 * w]
+            A2 = A[:, :, 2 * w: 3 * w]
 
-            w_total = B_img.size(2)
+            w_total = B.size(2)
             w = int(w_total / 3)
-            h = B_img.size(1)
-            B0 = A_img[:, :, 0: w]
+            h = B.size(1)
+            B0 = B[:, :, 0: w]
 
-            B1 = A_img[:, :, w: 2 * w]
+            B1 = B[:, :, w: 2 * w]
 
-            B2 = A_img[:, :, 2 * w: 3 * w]
+            B2 = B[:, :, 2 * w: 3 * w]
 
             return {'A0': A0, 'A1': A1, 'A2': A2, 'B0': B0, 'B1': B1, 'B2': B2, 'A_paths': A_path, 'B_paths': B_path}
-
-
 
 
         # return {'A': A, 'B': B, 'A_paths': A_path, 'B_paths': B_path}

@@ -538,6 +538,8 @@ class UnetSkipConnectionBlock(nn.Module):
 
     def forward(self, x):
         if self.outermost:
+            # import ipdb
+            # ipdb.set_trace()
             return self.model(x)
         else:   # add skip connections
             return torch.cat([x, self.model(x)], 1)

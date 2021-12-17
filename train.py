@@ -26,6 +26,7 @@ from data import create_dataset
 # 创建模型
 from models import create_model
 from util.visualizer import Visualizer
+import ipdb
 
 if __name__ == '__main__':
     # 1. 获得训练的参数opt，设定数据集，模型，cuda情况
