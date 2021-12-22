@@ -273,9 +273,17 @@ class T2VGANModel(BaseModel):
         # Backward cycle loss || G_A(G_B(B)) - B||
         self.loss_cycle_B = self.criterionCycle(self.rec_B, self.real_B1) * lambda_B
         # Warpped loss A
-        self.loss_warp_A = self.criterionIdt(self.fake_B1, self.warp_B1) * lambda_A
+        # crop
+        BII, CII, H, W = self.fake_B1.size()
+        fB = self.fake_B1[:, :, int(H*self.opt.wl_ratio):H - int(H*self.opt.wl_ratio), int(W*self.opt.wl_ratio): W - int(W*self.opt.wl_ratio)]
+        wB = self.warp_B1[:, :, int(H*self.opt.wl_ratio):H - int(H*self.opt.wl_ratio), int(W*self.opt.wl_ratio): W - int(W*self.opt.wl_ratio)]
+        self.loss_warp_A = self.criterionIdt(fB, wB) * lambda_A
         # Warpped loss B
-        self.loss_warp_B = self.criterionIdt(self.fake_A1, self.warp_A1) * lambda_B
+        # crop
+        BIII, CIII, H, W = self.fake_A1.size()
+        fA = self.fake_A1[:, :, int(H*self.opt.wl_ratio):H - int(H*self.opt.wl_ratio), int(W*self.opt.wl_ratio): W - int(W*self.opt.wl_ratio)]
+        wA = self.warp_A1[:, :, int(H*self.opt.wl_ratio):H - int(H*self.opt.wl_ratio), int(W*self.opt.wl_ratio): W - int(W*self.opt.wl_ratio)]
+        self.loss_warp_B = self.criterionIdt(fA, wA) * lambda_B
         # combined loss and calculate gradients
         self.loss_G = self.loss_G_A + self.loss_G_B + self.loss_cycle_A + self.loss_cycle_B + self.loss_warp_A + self.loss_warp_B + self.loss_idt_A + self.loss_idt_B 
         self.loss_G.backward()
