@@ -58,7 +58,6 @@ class UnalignedTripletDataset(BaseDataset):
         B_path = self.B_paths[index_B]
         A_img = Image.open(A_path).convert('RGB')
         B_img = Image.open(B_path).convert('RGB')
-
         # apply image transformation
         # 对于triplet图片就只是使用了normalize操作
         # print("Aimg")

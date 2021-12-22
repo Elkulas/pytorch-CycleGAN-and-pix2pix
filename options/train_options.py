@@ -37,6 +37,13 @@ class TrainOptions(BaseOptions):
         parser.add_argument('--lr_decay_iters', type=int, default=10, help='multiply by a gamma every lr_decay_iters iterations')
         parser.add_argument('--adversarial_loss_p', action='store_true', help='also train the prediction model with an adversarial loss')
 
+        # raft
+        parser.add_argument('--raft_model', default='raft/model/raft-kitti.pth', help="restore checkpoint")
+        parser.add_argument('--path', help="dataset for evaluation")
+        parser.add_argument('--small', action='store_true', help='use small model')
+        parser.add_argument('--mixed_precision', action='store_true', help='use mixed precision')
+        parser.add_argument('--alternate_corr', action='store_true', help='use efficent correlation implementation')
+
 
         self.isTrain = True
         return parser

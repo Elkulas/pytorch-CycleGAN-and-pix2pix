@@ -57,6 +57,7 @@ if __name__ == '__main__':
         ## 在setup后的学习率schdule进行下一步的step
         model.update_learning_rate()    # update learning rates in the beginning of every epoch.
         ## 对所有的data进行循环
+
         for i, data in enumerate(dataset):  # inner loop within one epoch
             iter_start_time = time.time()  # timer for computation per iteration
             if total_iters % opt.print_freq == 0:
@@ -64,7 +65,9 @@ if __name__ == '__main__':
 
             total_iters += opt.batch_size
             epoch_iter += opt.batch_size
+            print('total_iters %d, epoch_iter %d' % (total_iters, epoch_iter))
             ## 从dataset中取出data然后preprocess，之后放到model
+            # ipdb.set_trace()
             model.set_input(data)         # unpack data from dataset and apply preprocessing
             ## 计算loss
             ## 定义loss是在init当中

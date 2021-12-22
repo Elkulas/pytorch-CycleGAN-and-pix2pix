@@ -89,6 +89,8 @@ def get_transform(opt, params=None, grayscale=False, method=Image.BICUBIC, conve
         # 针对tri特别设计
         if 'triplet' in opt.preprocess:
             transform_list.append(transforms.Lambda(lambda img: __scale_width(img, opt.load_size * 3, opt.crop_size, method)))
+        elif 'twins' in opt.preprocess:
+            transform_list.append(transforms.Lambda(lambda img: __scale_width(img, opt.load_size * 2, opt.crop_size, method)))
         else:
             transform_list.append(transforms.Lambda(lambda img: __scale_width(img, opt.load_size, opt.crop_size, method)))
 
